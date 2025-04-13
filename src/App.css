@@ -1,0 +1,24 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+#root {
+  text-align: center;
+}
+
+
+/*Iconos de ojo para ver o ocultar contraseña en login.*/
+.see{
+  background-image:url("../public/icons/ojo_abierto.svg");
+  background-repeat: no-repeat;
+
+}
+
+.unsee{
+  background-image: url("../public/icons/ojo_cerrado.svg");
+  background-repeat: no-repeat;
+
+}
+
+
