@@ -42,6 +42,33 @@ export async function fetchLogin(credentials) {
 
 }
 
+export async function fetchLogout() {
+    try {
+        const token = localStorage.getItem("token"); // Recuperar el token
+
+        if (!token) {
+            throw new Error("No hay token disponible");
+        }
+
+        const response = await fetch(`${BASE_URL}logout`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`, // Asegurar que se envía el token
+            },
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            throw new Error(`Error en la solicitud de logout: ${errorText}`);
+        }
+
+        return response.json(); // Retornar la respuesta JSON
+    } catch (error) {
+        throw new Error("No se pudo conectar con el servidor: " + error.message);
+    }
+}
+
 export async function fetchProfiles() {
     try {
         const token = localStorage.getItem("token");
