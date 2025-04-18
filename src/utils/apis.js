@@ -86,3 +86,54 @@ export async function fetchProfiles() {
         throw new Error(error.message);
     }
 }
+
+export async function fetchItems(filters = {}) {
+    const token = localStorage.getItem("token");
+
+    const queryParams = new URLSearchParams(filters).toString();
+
+    const res = await fetch(`${BASE_URL}items?${queryParams}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!res.ok) {
+        const errRes = await response.json();
+        throw new Error(errRes.message || 'Error al obtener ítems');
+    }
+
+    const json = await res.json();
+    return json.data;
+}
+
+
+export async function fetchTypes() {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}types`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    const json = await res.json();
+    return json.data;
+}
+
+export async function fetchLocations() {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}locations`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+
+    const json = await res.json();
+    return json.data;
+}
+
+
+export async function fetchBoxes() {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}boxes`, {
+        headers: { Authorization: `Bearer ${token}` }
+    });
+    const json = await res.json();
+    return json.data;
+}

@@ -93,4 +93,3 @@ function SidebarItem({ icon, label, isOpen }) {
         </div>
     );
 }
-
