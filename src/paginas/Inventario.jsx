@@ -3,15 +3,25 @@ import { Topbar } from "../componentes/TopBar";
 import React, { useState, useEffect } from "react";
 import { fetchItems, fetchBoxes, fetchLocations, fetchTypes } from "../utils/apis";
 import { InventoryCard } from "../componentes/InventoryCard";
+import { MainLayout } from "../componentes/MainLayout";
 
 
 export function Inventario() {
+
+
+    const [pagination, setPagination] = useState({
+        current_page: 1,
+        last_page: 1,
+        per_page: 20,
+        total: 0
+    });
 
     const [filters, setFilters] = useState({
         search: '',
         type_id: '',
         location_id: '',
         box_id: '',
+        page: 1,
     });
 
     const [types, setTypes] = useState([]);
@@ -42,6 +52,7 @@ export function Inventario() {
             try {
                 const data = await fetchItems(filters);
                 setItems(data.items); // usamos .items porque el backend devuelve así
+                setPagination(data.pagination)
             } catch (error) {
                 console.error("Error al cargar los ítems:", error.message);
             } finally {
@@ -53,18 +64,23 @@ export function Inventario() {
     }, [filters]);
 
     const handleChange = (key, value) => {
-        setFilters(prev => ({ ...prev, [key]: value }));
+        setFilters(prev => ({ ...prev, [key]: value , page:1}));
+        
+    };
+    const handlePageChange = (newPage) => {
+        setFilters(prev => ({ ...prev, page: newPage }));
     };
 
-    if (loading) return <p>Cargando ítems...</p>;
+
+    //if (loading) return <p>Cargando ítems...</p>;
 
 
 
     return (
-        <div className="grid grid-cols-[auto_1fr] h-screen transition-all duration-300">
-            <Sidebar />
+        <MainLayout >
+           
             <div className="flex flex-col">
-                <Topbar user={""} />
+                
                 <div className="p-6">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                         <input
@@ -90,6 +106,7 @@ export function Inventario() {
                             <select
                                 value={filters.type_id}
                                 onChange={(e) => handleChange('type_id', e.target.value)}
+                                
                                 className="border border-gray-300 rounded px-4 py-2"
                             >
                                 <option value="">Todos los tipos</option>
@@ -125,22 +142,43 @@ export function Inventario() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                        {items.map((item) => (
-                            <InventoryCard key={item.id}
-                                {...item} />
-                        ))}
-                    </div>
-
-                    {items.length === 0 && (
+                    {loading ? <p className="text-center text-gray-400 mt-10">Cargando ítems...</p> :
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                            {items.map((item) => (
+                                <InventoryCard key={item.id}
+                                    {...item} />
+                            ))}
+                        </div>
+                    }
+                    {items.length === 0 && !loading && (
                         <p className="text-center text-gray-400 mt-10">No se encontraron ítems</p>
                     )}
+                    <div className="flex justify-center items-center gap-2 mt-6">
+                        <button
+                            disabled={pagination.current_page === 1}
+                            onClick={() => handlePageChange(pagination.current_page - 1)}
+                            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                        >
+                            ← Anterior
+                        </button>
+
+                        <span>Página {pagination.current_page} de {pagination.last_page}</span>
+
+                        <button
+                            disabled={pagination.current_page === pagination.last_page}
+                            onClick={() => handlePageChange(pagination.current_page + 1)}
+                            className="px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                        >
+                            Siguiente →
+                        </button>
+                    </div>
+
 
                     <button className="fixed bottom-6 right-6 rounded-full px-6 py-3 text-lg shadow-lg bg-blue-600 text-white hover:bg-blue-700">
                         ➕ Agregar ítem
                     </button>
                 </div>
             </div>
-        </div>
+        </MainLayout>
     )
 }

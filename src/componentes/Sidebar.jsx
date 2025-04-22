@@ -1,15 +1,16 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import { useSidebar } from "../utils/SidebarContext";
 
 //Este sidebar tendra 3 secciones en la inicial habra el icono de perfil del barco con su foto, y el nombre del barco junto con el icono para abrir y cerrar el sidebar para ocupar menos espacio.
 //En la seccion principal que sera el menu estaran los links a cada pagina del app y sus iconos, al reducir la bara solo se veranm los iconos.
 //En el footer del menu estara la seccion de ajustes y configuracion.
 export function Sidebar({ name}) {
 
-    const [isOpen, setIsOpen] = useState(true);
+    const { isOpen, toggleSidebar } = useSidebar();
 
     return (
-        <div className={`h-full bg-[#143D63] text-white flex flex-col justify-between transition-all duration-300 ease-in-out ${isOpen ? "w-64" : "w-25"}`}>
+        <div className={`fixed left-0 top-0 h-screen bg-[#143D63] text-white flex flex-col justify-between transition-all ease-in-out ${isOpen ? "w-64" : "w-25"}`}>
             {/* Top section */}
             <div>
                 <div className="flex items-center gap-2 px-4 py-4 bg-[#274A6B]">
@@ -22,7 +23,7 @@ export function Sidebar({ name}) {
 
                     {isOpen && <span className="font-medium">Brende</span>}
                     <div className={isOpen ? "ml-auto" : "mx-auto"}>
-                        <button onClick={() => setIsOpen(!isOpen)} className="text-white opacity-70 hover:opacity-100">
+                        <button onClick={() => toggleSidebar(!isOpen)} className="text-white opacity-70 hover:opacity-100">
                             {isOpen ? (
                                 <img src="/icons/cerrar_panel.svg" className="w-10 h-10" alt="Cerrar" />
                             ) : (
@@ -47,7 +48,7 @@ export function Sidebar({ name}) {
                             </Link>
                         </li>
                         <li className="px-4 py-2 hover:bg-[#1C4E80] transition-all cursor-pointer">
-                            <Link to="/" className="flex items-center gap-2">
+                            <Link to="/Mapa" className="flex items-center gap-2">
                                 <SidebarItem icon={<img src="/icons/localizacion.svg" className="w-10 h-10" />} label="Mapa" isOpen={isOpen} />
                             </Link>
                         </li>

@@ -5,6 +5,7 @@ export function Topbar({ user }) {
 
     const navigate = useNavigate();
     
+    
     const handleLogout = async () => {
         try {
             await fetchLogout(); // llamada al backend
