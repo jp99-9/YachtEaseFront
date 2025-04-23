@@ -137,3 +137,15 @@ export async function fetchBoxes() {
     const json = await res.json();
     return json.data;
 }
+
+export async function fetchLocationItems (locationId){
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}locations/${locationId}/items`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+    if (!res.ok) throw new Error("Error al cargar los ítems de la localización");
+    return await res.json();
+  };
