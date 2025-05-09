@@ -26,7 +26,7 @@ export function Topbar({ user }) {
     };
 
     return (
-        <header className="w-full h-16 px-6 py-10 flex items-center justify-between bg-white/30 backdrop-blur-md shadow-sm border-b border-white/20">
+        <header className="w-full h-16 px-6 py-8 flex items-center justify-between bg-white/30 backdrop-blur-sm shadow-sm border-b border-white/20">
             <h1 className="text-xl font-semibold text-[#d4af37]">YachtEase</h1>
             <div className="flex items-center gap-3">
                 <span className="text-gray-800 font-medium">{user.name}</span>

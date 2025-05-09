@@ -5,6 +5,7 @@ import { Dashboard } from './paginas/Dashboard';
 import { Perfiles } from './paginas/Perfiles';
 import { Inventario } from './paginas/Inventario';
 import { Mapa } from './paginas/Mapa';
+import { Movements } from './paginas/Movements';
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
         <Route path='/Inventario' element={<Inventario />} />
         <Route path='/' element={<Perfiles />} />
         <Route path='/Mapa' element={<Mapa />} />
+        <Route path='/Movements' element={<Movements />} />
       </Routes>
 
     </BrowserRouter>

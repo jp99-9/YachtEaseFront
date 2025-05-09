@@ -87,6 +87,24 @@ export async function fetchProfiles() {
     }
 }
 
+export async function fetchRoles() {
+    try {
+        const token = localStorage.getItem("token");
+
+        const response = await fetch(`${BASE_URL}roles`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        const res = await response.json();
+        return res.data;
+
+    } catch (error) {
+        throw new Error(error.message);
+    }
+}
+
 export async function fetchItems(filters = {}) {
     const token = localStorage.getItem("token");
 
@@ -138,14 +156,52 @@ export async function fetchBoxes() {
     return json.data;
 }
 
-export async function fetchLocationItems (locationId){
+export async function fetchLocationItems(locationId) {
     const token = localStorage.getItem("token");
     const res = await fetch(`${BASE_URL}locations/${locationId}/items`, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
     });
-  
+
     if (!res.ok) throw new Error("Error al cargar los ítems de la localización");
     return await res.json();
-  };
+};
+
+
+export async function fetchMovements() {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}movements`, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+        },
+    });
+    if (!response.ok) {
+        throw new Error("Error al cargar movimientos");
+    }
+    const json = await response.json();
+    return json.data;
+}
+
+export async function fetchCrearPerfil(data) {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}profiles`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`,
+
+        },
+        body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    if (!res.ok || !json?.data?.profile) {
+        console.error("Respuesta inesperada del servidor:", json);
+        throw new Error('Respuesta inesperada del servidor');
+    }
+
+    return json;
+
+};

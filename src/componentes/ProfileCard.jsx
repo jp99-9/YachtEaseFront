@@ -2,7 +2,7 @@
 
 export function ProfileCard({avatar, id, name}) {
     return (
-        <div className="bg-white rounded-2xl shadow-md p-4 flex flex-col items-center w-36 sm:w-44">
+        <div className="bg-white hover:bg-white/20 border border-white/20 rounded-xl p-4 aspect-square flex flex-col items-center justify-center transition-all duration-300 ease-in-out">
             <img
                 src={avatar || "/icons/usuario.png"}
                 alt={name}

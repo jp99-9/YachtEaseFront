@@ -1,5 +1,3 @@
-import { Sidebar } from "../componentes/Sidebar";
-import { Topbar } from "../componentes/TopBar";
 import React, { useState, useEffect } from "react";
 import { fetchItems, fetchBoxes, fetchLocations, fetchTypes } from "../utils/apis";
 import { InventoryCard } from "../componentes/InventoryCard";
@@ -64,8 +62,8 @@ export function Inventario() {
     }, [filters]);
 
     const handleChange = (key, value) => {
-        setFilters(prev => ({ ...prev, [key]: value , page:1}));
-        
+        setFilters(prev => ({ ...prev, [key]: value, page: 1 }));
+
     };
     const handlePageChange = (newPage) => {
         setFilters(prev => ({ ...prev, page: newPage }));
@@ -78,9 +76,9 @@ export function Inventario() {
 
     return (
         <MainLayout >
-           
+
             <div className="flex flex-col">
-                
+
                 <div className="p-6">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                         <input
@@ -106,7 +104,7 @@ export function Inventario() {
                             <select
                                 value={filters.type_id}
                                 onChange={(e) => handleChange('type_id', e.target.value)}
-                                
+
                                 className="border border-gray-300 rounded px-4 py-2"
                             >
                                 <option value="">Todos los tipos</option>
