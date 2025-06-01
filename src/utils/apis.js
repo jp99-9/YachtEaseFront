@@ -205,3 +205,20 @@ export async function fetchCrearPerfil(data) {
     return json;
 
 };
+
+export async function fetchDeleteProfile(profileId) {
+    const token = localStorage.getItem("token");
+    const res = await fetch(`${BASE_URL}profiles/${profileId}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`,
+
+        },
+    });
+    if (!res.ok) {
+        const text = await res.text(); // ← evita error si la respuesta no es JSON
+        throw new Error(`Error ${response.status}: ${text}`);
+    }
+    return await res.json();
+}

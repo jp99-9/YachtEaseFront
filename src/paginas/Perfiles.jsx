@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchProfiles, fetchRoles, fetchCrearPerfil } from "../utils/apis";
+import { fetchProfiles, fetchRoles, fetchCrearPerfil, fetchDeleteProfile } from "../utils/apis";
 import { Link } from "react-router-dom";
 import { ProfileCard } from "../componentes/ProfileCard";
 
@@ -17,6 +17,19 @@ export function Perfiles() {
     const [mensaje, setMensaje] = useState(null);
 
 
+    const handleDeleteProfile = async (id) => {
+        if (!confirm('¿Estás seguro de que deseas eliminar este perfil?')) return;
+
+        try {
+            await fetchDeleteProfile(id);
+            // Actualiza la lista de perfiles eliminando el eliminado
+            setPerfiles(prev => prev.filter(p => p.id !== id));
+        } catch (error) {
+            alert('No se pudo eliminar el perfil: ' + error.message);
+        }
+    };
+
+
     async function handleAddProfile(e) {
         e.preventDefault();
 
@@ -28,11 +41,8 @@ export function Perfiles() {
 
         try {
             const data = await fetchCrearPerfil(nuevoPerfil);
-
-            const perfil = data.data?.profile;
-            if (!perfil) throw new Error('El perfil no fue devuelto correctamente');
             // Actualiza la lista de perfiles para mostrar el nuevo
-            setPerfiles(prev => [...prev, perfil]);
+            setPerfiles(prev => [...prev, data.data.profile]);
 
             // Limpia el formulario
             setNewProfileName('');
@@ -71,7 +81,7 @@ export function Perfiles() {
 
     return (
         <div className="min-h-screen bg-gradient-to-t from-[#0A3D62] to-[#147CC8] flex flex-col items-center justify-center px-4">
-            
+
             <h1 className="text-white text-2xl sm:text-3xl font-semibold mb-10 text-center">
                 CHOOSE YOUR PROFILE
             </h1>
@@ -83,7 +93,10 @@ export function Perfiles() {
                     <>
                         {perfiles.map((perfil) => (
                             <Link to={`/Dashboard`} key={perfil.id}>
-                                <ProfileCard {...perfil} />
+                                <ProfileCard {...perfil}
+                                    //role={perfil.role?.name || "Sin rol"}
+                                    onEdit={(id) => console.log("Editar perfil con id:", id)}
+                                    onDelete={() => handleDeleteProfile(perfil.id)} />
                             </Link>
                         ))}
 
@@ -112,7 +125,7 @@ export function Perfiles() {
                                     <h2 className="text-xl font-semibold mb-4 text-[#1B2C47]">Nuevo Perfil</h2>
 
                                     <form onSubmit={handleAddProfile}>
-                                        {mensaje && <p className="text-sm text-green-700 mt-2">{mensaje}</p>}
+                                        {mensaje && <p className="text-lg text-green-700 my-3 ">{mensaje}</p>}
                                         <input
                                             type="text"
                                             placeholder="Nombre del perfil"
@@ -138,12 +151,12 @@ export function Perfiles() {
                                             placeholder="URL del avatar (opcional)"
                                             value={avatar}
                                             onChange={(e) => setAvatar(e.target.value)}
-                                            className="border p-2 rounded"
+                                            className="ml-5 border p-2 rounded"
                                         />
                                         {/* Puedes añadir selector de avatar, etc. */}
                                         <button
                                             type="submit"
-                                            className="w-full bg-[#147CC8] text-white py-2 rounded hover:bg-[#0A3D62] transition"
+                                            className="w-full bg-[#147CC8] text-white py-2 mt-4 rounded hover:bg-[#0A3D62] transition"
                                         >
                                             Crear
                                         </button>

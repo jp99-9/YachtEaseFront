@@ -20,7 +20,7 @@ export function MainLayout({ children }) {
             <Topbar user={""} />
 
             {/* El contenido sí se mueve con el sidebar */}
-            <div className={`transition-all duration-300 flex-1 overflow-auto p-6 ${isOpen ? "ml-64" : "ml-24"}`}>
+            <div className={`transition-all duration-300 flex-1 overflow-auto p-14 ${isOpen ? "ml-64" : "ml-24"}`}>
                 {children}
             </div>
         </div>
