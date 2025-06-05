@@ -1,12 +1,11 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { useSidebar } from "../utils/SidebarContext";
 import { useLocation } from "react-router-dom";
 
 
 //Este sidebar tendra 3 secciones en la inicial habra el icono de perfil del barco con su foto, y el nombre del barco junto con el icono para abrir y cerrar el sidebar para ocupar menos espacio.
 //En la seccion principal que sera el menu estaran los links a cada pagina del app y sus iconos, al reducir la bara solo se veranm los iconos.
-//En el footer del menu estara la seccion de ajustes y configuracion.
+//En el footer del menu estara la seccion de ajustes y configuracion.sss
 export function Sidebar({ name }) {
 
     const { isOpen, toggleSidebar } = useSidebar();
