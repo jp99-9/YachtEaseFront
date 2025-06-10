@@ -51,8 +51,16 @@ export function Mapa() {
     return (
         <MainLayout>
             <div className="p-6">
-                <div className="bg-white shadow-xl rounded-2xl overflow-hidden relative max-w-5xl mx-auto">
-                    <img src="./images/floor1.png" alt="Plano del barco" className="w-full object-contain" onClick={handleImageClick} />
+                <div className="bg-white shadow-xl rounded-2xl overflow-hidden relative max-w-5xl mx-auto p-4">
+                    <div className="w-full">
+                        <img 
+                            src="./images/floor1.png" 
+                            alt="Plano del barco" 
+                            className="w-full h-auto object-contain max-h-[80vh]"
+                            onClick={handleImageClick}
+                            loading="lazy"
+                        />
+                    </div>
 
                     {/* Puntos encima */}
                     {locations.map(loc => (

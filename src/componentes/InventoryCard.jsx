@@ -1,25 +1,25 @@
 import { useState } from "react"
 
 export function InventoryCard({
-    id, name, description, quantity, image, brand, minimum_recomended, type, storage_box, location
+    id, name, description, quantity, image, brand, minimum_recommended, type, storage_box, location
 }) {
     const [openMore, setOpenMore] = useState(true);
 
     const handleToggle = () => {
         setOpenMore(!openMore);
     };
-
     // Example tags, you can replace with real data if available
-    const tags = [type?.name, brand, location?.name, storage_box];
+    const tags = [type?.name, brand, location?.name, storage_box.name];
 
     return (
         <div key={id} className="flex items-start bg-white rounded-xl shadow-md p-4 w-full max-w-xl relative">
             {/* Image */}
-            <div className="w-20 h-28 rounded-md bg-indigo-800 flex-shrink-0 mr-4">
+            <div className="w-32 flex-shrink-0 mr-4 overflow-hidden">
                 <img
-                    src={image || "/icons/usuario.png"}
+                    src={`http://localhost:8000/storage/${image}` || "/icons/usuario.png"}
                     alt={name}
-                    className="w-full h-full object-cover rounded-md"
+                    className="w-full h-auto object-contain rounded-md"
+                    loading="lazy"
                 />
             </div>
             {/* Content */}
@@ -53,7 +53,7 @@ export function InventoryCard({
                 {!openMore && (
                     <div className="mt-2 text-sm text-gray-500">
                         <div>Cantidad: {quantity}</div>
-                        <div>Mínimo recomendado: {minimum_recomended}</div>
+                        <div>Mínimo recomendado: {minimum_recommended}</div>
                     </div>
                 )}
             </div>

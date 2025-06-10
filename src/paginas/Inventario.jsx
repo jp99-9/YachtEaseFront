@@ -51,6 +51,8 @@ export function Inventario() {
                 const data = await fetchItems(filters);
                 setItems(data.items); // usamos .items porque el backend devuelve así
                 setPagination(data.pagination)
+                console.log(data.items);
+
             } catch (error) {
                 console.error("Error al cargar los ítems:", error.message);
             } finally {

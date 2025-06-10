@@ -33,9 +33,16 @@ export function Topbar({ user }) {
   z-50">
             <h1 className="text-xl font-semibold text-[#d4af37]">YachtEase</h1>
             <div className="flex items-center gap-3">
-                <div className="p-0.5 bg-gradient-to-tr from-[#143D63] to-yellow-500 rounded-full">
-                    <img src="/icons/usuario.png" alt={user.name}
-                        className="w-10 h-10 rounded-full bg-white"
+                <div className="p-0.5 bg-gradient-to-tr from-[#143D63] to-yellow-500 rounded-full overflow-hidden">
+                    <img 
+                        src="/icons/usuario.png" 
+                        alt={user.name}
+                        className="w-10 h-10 rounded-full bg-white object-cover"
+                        loading="lazy"
+                        onError={(e) => {
+                            e.target.onerror = null;
+                            e.target.src = "/icons/usuario.png";
+                        }}
                     />
                 </div>
                 <span className="text-white font-medium">{user.name}</span>
