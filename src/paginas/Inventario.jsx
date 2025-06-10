@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { fetchItems, fetchBoxes, fetchLocations, fetchTypes } from "../utils/apis";
+import { fetchItems, fetchBoxes, fetchLocations, fetchTypes, fetchCreateItem } from "../utils/apis";
 import { InventoryCard } from "../componentes/InventoryCard";
 import { MainLayout } from "../componentes/MainLayout";
+import AddItemForm from "../componentes/AddItemForm";
 
 
 export function Inventario() {
-
+    const [isAddItemModalOpen, setIsAddItemModalOpen] = useState(false);
 
     const [pagination, setPagination] = useState({
         current_page: 1,
@@ -49,7 +50,7 @@ export function Inventario() {
         const loadItems = async () => {
             try {
                 const data = await fetchItems(filters);
-                setItems(data.items); // usamos .items porque el backend devuelve así
+                setItems(data.items);
                 setPagination(data.pagination)
                 console.log(data.items);
 
@@ -65,19 +66,28 @@ export function Inventario() {
 
     const handleChange = (key, value) => {
         setFilters(prev => ({ ...prev, [key]: value, page: 1 }));
-
     };
+
     const handlePageChange = (newPage) => {
         setFilters(prev => ({ ...prev, page: newPage }));
     };
 
-
-    //if (loading) return <p>Cargando ítems...</p>;
-
-
+    const handleAddItem = async (formData) => {
+        try {
+            await fetchCreateItem(formData);
+            // After successful creation, refresh the items list
+            const data = await fetchItems(filters);
+            setItems(data.items);
+            setPagination(data.pagination);
+            setIsAddItemModalOpen(false);
+        } catch (error) {
+            console.error("Error al crear el ítem:", error.message);
+            // You might want to show an error message to the user here
+        }
+    };
 
     return (
-        <MainLayout >
+        <MainLayout>
             <div className="flex flex-col min-h-screen">
                 <div className="p-6 flex-grow">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
@@ -130,6 +140,7 @@ export function Inventario() {
                                         type_id: '',
                                         location_id: '',
                                         box_id: '',
+                                        page: 1,
                                     })
                                 }
                                 className="border border-gray-400 rounded px-4 py-2 hover:bg-gray-100"
@@ -174,9 +185,20 @@ export function Inventario() {
                     </div>
                 </div>
 
-                <button className="fixed bottom-6 right-6 rounded-full px-6 py-3 text-lg shadow-lg bg-blue-600 text-white hover:bg-blue-700">
+                <button 
+                    onClick={() => setIsAddItemModalOpen(true)}
+                    className="fixed bottom-6 right-6 rounded-full px-6 py-3 text-lg shadow-lg bg-blue-600 text-white hover:bg-blue-700">
                     ➕ Agregar ítem
                 </button>
+
+                <AddItemForm
+                    isOpen={isAddItemModalOpen}
+                    onClose={() => setIsAddItemModalOpen(false)}
+                    types={types}
+                    locations={locations}
+                    boxes={boxes}
+                    onSubmit={handleAddItem}
+                />
             </div>
         </MainLayout>
     )

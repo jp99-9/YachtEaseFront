@@ -222,3 +222,26 @@ export async function fetchDeleteProfile(profileId) {
     }
     return await res.json();
 }
+
+export const fetchCreateItem = async (itemData) => {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${BASE_URL}items`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify(itemData)
+        });
+
+        if (!response.ok) {
+            throw new Error('Error al crear el ítem');
+        }
+
+        return await response.json();
+    } catch (error) {
+        console.error('Error:', error);
+        throw error;
+    }
+};
