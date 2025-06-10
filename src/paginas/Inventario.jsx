@@ -76,10 +76,8 @@ export function Inventario() {
 
     return (
         <MainLayout >
-
-            <div className="flex flex-col">
-
-                <div className="p-6">
+            <div className="flex flex-col min-h-screen">
+                <div className="p-6 flex-grow">
                     <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-6">
                         <input
                             type="text"
@@ -104,7 +102,6 @@ export function Inventario() {
                             <select
                                 value={filters.type_id}
                                 onChange={(e) => handleChange('type_id', e.target.value)}
-
                                 className="border border-gray-300 rounded px-4 py-2"
                             >
                                 <option value="">Todos los tipos</option>
@@ -149,9 +146,12 @@ export function Inventario() {
                         </div>
                     }
                     {items.length === 0 && !loading && (
-                        <p className="text-center text-gray-400 mt-10">No se encontraron ítems</p>
+                        <p className="text-center text-gray-400 mt-10">No se encontraron ítems.</p>
                     )}
-                    <div className="flex justify-center items-center gap-2 mt-6">
+                </div>
+
+                <div className="mt-auto">
+                    <div className="py-4 px-6 flex justify-center items-center gap-2">
                         <button
                             disabled={pagination.current_page === 1}
                             onClick={() => handlePageChange(pagination.current_page - 1)}
@@ -170,12 +170,11 @@ export function Inventario() {
                             Siguiente →
                         </button>
                     </div>
-
-
-                    <button className="fixed bottom-6 right-6 rounded-full px-6 py-3 text-lg shadow-lg bg-blue-600 text-white hover:bg-blue-700">
-                        ➕ Agregar ítem
-                    </button>
                 </div>
+
+                <button className="fixed bottom-6 right-6 rounded-full px-6 py-3 text-lg shadow-lg bg-blue-600 text-white hover:bg-blue-700">
+                    ➕ Agregar ítem
+                </button>
             </div>
         </MainLayout>
     )
