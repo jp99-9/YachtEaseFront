@@ -72,7 +72,7 @@ export function Sidebar({ name }) {
                                 </Link>
                             </li>
                             <li className="px-4 py-2 ">
-                                <Link to="/" className="flex items-center gap-2">
+                                <Link to="/ContactUs" className="flex items-center gap-2">
                                     <SidebarItem icon={<img src="/icons/ayuda.svg" />} label="Soporte" isOpen={isOpen} />
                                 </Link>
                             </li>
