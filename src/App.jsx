@@ -6,6 +6,7 @@ import { Perfiles } from './paginas/Perfiles';
 import { Inventario } from './paginas/Inventario';
 import { Mapa } from './paginas/Mapa';
 import { Movements } from './paginas/Movements';
+import { Alertas } from './paginas/Alertas';
 
 function App() {
 
@@ -20,6 +21,7 @@ function App() {
         <Route path='/' element={<Perfiles />} />
         <Route path='/Mapa' element={<Mapa />} />
         <Route path='/Movements' element={<Movements />} />
+        <Route path='/Alertas' element={<Alertas />} />
       </Routes>
 
     </BrowserRouter>

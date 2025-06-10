@@ -53,7 +53,7 @@ export function Sidebar({ name }) {
                         <p className="text-left text-sm ml-7 opacity-40 ">Control</p>
 
                         <li className="px-4 py-2">
-                            <Link to="/" className="flex items-center gap-2">
+                            <Link to="/Alertas" className="flex items-center gap-2">
                                 <SidebarItem icon={<img src="/icons/alertas.svg" />} label="Alertas" isOpen={isOpen} />
                             </Link>
                         </li>
