@@ -88,7 +88,7 @@ export function Login() {
                     <label className="block text-[#F5F5F5] text-left ml-4 mb-2">Contraseña</label>
                     <div className="relative">
                         <input
-                            type="password"
+                            type={seePassword ? "text" : "password"}
                             placeholder="Ingresa tu contraseña"
                             id="password"
                             name="password"

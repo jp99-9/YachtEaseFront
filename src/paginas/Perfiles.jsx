@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { fetchProfiles, fetchRoles, fetchCrearPerfil, fetchDeleteProfile } from "../utils/apis";
+import { fetchProfiles, fetchRoles, fetchCrearPerfil, fetchDeleteProfile, fetchUpdateProfile } from "../utils/apis";
 import { Link } from "react-router-dom";
 import { ProfileCard } from "../componentes/ProfileCard";
 
@@ -10,11 +10,13 @@ export function Perfiles() {
     const [loading, setLoading] = useState(true);
 
     const [showModal, setShowModal] = useState(false);
+    const [showEditModal, setShowEditModal] = useState(false);
     const [newProfileName, setNewProfileName] = useState("");
     const [roleId, setRoleId] = useState('');
     const [avatar, setAvatar] = useState('');
     const [roles, setRoles] = useState([]);
     const [mensaje, setMensaje] = useState(null);
+    const [editingProfile, setEditingProfile] = useState(null);
 
 
     const handleDeleteProfile = async (id) => {
@@ -29,6 +31,43 @@ export function Perfiles() {
         }
     };
 
+    const handleEditProfile = (profile) => {
+        setEditingProfile(profile);
+        setNewProfileName(profile.name || '');
+        // Get role_id from user's pivot if it exists
+        setRoleId(profile.user?.pivot?.role?.id || '');
+        setAvatar(profile.avatar || '');
+        setShowEditModal(true);
+    };
+
+    const handleUpdateProfile = async (e) => {
+        e.preventDefault();
+
+        const updatedProfile = {
+            name: newProfileName,
+            role_id: roleId || null,
+            avatar: avatar || null,
+        };
+
+        try {
+            const data = await fetchUpdateProfile(editingProfile.id, updatedProfile);
+            // Actualiza la lista de perfiles manteniendo la estructura de datos completa
+            setPerfiles(prev => prev.map(p => 
+                p.id === editingProfile.id ? {...p, ...data.data.profile} : p
+            ));
+
+            // Limpia el formulario
+            setNewProfileName('');
+            setRoleId('');
+            setAvatar('');
+            setShowEditModal(false);
+            setEditingProfile(null);
+            setMensaje("Perfil actualizado correctamente.");
+        } catch (error) {
+            setMensaje("Hubo un error al actualizar el perfil.");
+            console.error("Error al actualizar el perfil:", error);
+        }
+    };
 
     async function handleAddProfile(e) {
         e.preventDefault();
@@ -93,10 +132,12 @@ export function Perfiles() {
                     <>
                         {perfiles.map((perfil) => (
                             <Link to={`/Dashboard`} key={perfil.id}>
-                                <ProfileCard {...perfil}
-                                    //role={perfil.role?.name || "Sin rol"}
-                                    onEdit={(id) => console.log("Editar perfil con id:", id)}
-                                    onDelete={() => handleDeleteProfile(perfil.id)} />
+                                <ProfileCard 
+                                    {...perfil}
+                                    user={perfil.user}
+                                    onEdit={() => handleEditProfile(perfil)}
+                                    onDelete={() => handleDeleteProfile(perfil.id)} 
+                                />
                             </Link>
                         ))}
 
@@ -162,6 +203,58 @@ export function Perfiles() {
                                         </button>
 
 
+                                    </form>
+                                </div>
+                            </div>
+                        )}
+
+                        {showEditModal && (
+                            <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
+                                <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-md relative">
+                                    <button
+                                        className="absolute top-3 right-3 text-gray-500 hover:text-gray-800 text-xl"
+                                        onClick={() => {
+                                            setShowEditModal(false);
+                                            setEditingProfile(null);
+                                        }}
+                                    >
+                                        &times;
+                                    </button>
+                                    <h2 className="text-xl font-semibold mb-4 text-[#1B2C47]">Editar Perfil</h2>
+
+                                    <form onSubmit={handleUpdateProfile}>
+                                        {mensaje && <p className="text-lg text-green-700 my-3">{mensaje}</p>}
+                                        <input
+                                            type="text"
+                                            placeholder="Nombre del perfil"
+                                            className="w-full border border-gray-300 rounded px-3 py-2 mb-4"
+                                            value={newProfileName}
+                                            onChange={(e) => setNewProfileName(e.target.value)}
+                                        />
+                                        <select
+                                            value={roleId}
+                                            onChange={(e) => setRoleId(e.target.value)}
+                                            className="border p-2 rounded"
+                                        >
+                                            <option value="">Selecciona un rol</option>
+                                            {roles.map(role => (
+                                                <option key={role.id} value={role.id}>{role.name}</option>
+                                            ))}
+                                        </select>
+
+                                        <input
+                                            type="text"
+                                            placeholder="URL del avatar (opcional)"
+                                            value={avatar}
+                                            onChange={(e) => setAvatar(e.target.value)}
+                                            className="ml-5 border p-2 rounded"
+                                        />
+                                        <button
+                                            type="submit"
+                                            className="w-full bg-[#147CC8] text-white py-2 mt-4 rounded hover:bg-[#0A3D62] transition"
+                                        >
+                                            Actualizar
+                                        </button>
                                     </form>
                                 </div>
                             </div>

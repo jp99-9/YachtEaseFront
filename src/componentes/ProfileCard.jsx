@@ -1,4 +1,4 @@
-export function ProfileCard({ avatar, id, name, role, onEdit, onDelete }) {
+export function ProfileCard({ avatar, id, name, user, onEdit, onDelete }) {
     return (
         <div className="relative group bg-white hover:bg-white/10 border border-white/20 rounded-xl p-10 aspect-square flex flex-col items-center justify-center transition-transform duration-300 hover:scale-125 overflow-hidden">
             <div className="absolute top-2 right-2 flex gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
@@ -36,10 +36,10 @@ export function ProfileCard({ avatar, id, name, role, onEdit, onDelete }) {
                 />
             </div>
             <p className="text-[#1B2C47] font-medium text-sm sm:text-base">{name}</p>
-            {/* Mostrar el rol al hacer hover */}
-            {/* <p className="text-sm mt-1 text-white/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                {role}
-            </p> */}
+            {/* Show role name on hover only if user and role exist */}
+            <p className="text-sm mt-1 text-white/70 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                {user?.pivot?.role?.name || "Perfil sin usuario asignado"}
+            </p>
         </div>
     )
 }

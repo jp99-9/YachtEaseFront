@@ -185,6 +185,54 @@ export async function fetchMovements() {
     return json.data;
 }
 
+export async function fetchLatestMovements() {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`${BASE_URL}movements/latest`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        
+        if (!response.ok) {
+            throw new Error("Error al cargar los últimos movimientos");
+        }
+        
+        const json = await response.json();
+        // Handle both formats: direct array or wrapped in data property
+        return Array.isArray(json) ? json : (json.data || []);
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+    }
+}
+
+export async function fetchCreateMovement(movementData) {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`${BASE_URL}movements`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+            body: JSON.stringify(movementData),
+        });
+        
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || "Error al crear el movimiento");
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Error creating movement:', error);
+        throw error;
+    }
+}
+
 export async function fetchCrearPerfil(data) {
     const token = localStorage.getItem("token");
     const res = await fetch(`${BASE_URL}profiles`, {
@@ -197,10 +245,6 @@ export async function fetchCrearPerfil(data) {
         body: JSON.stringify(data),
     });
     const json = await res.json();
-    if (!res.ok || !json?.data?.profile) {
-        console.error("Respuesta inesperada del servidor:", json);
-        throw new Error('Respuesta inesperada del servidor');
-    }
 
     return json;
 
@@ -224,7 +268,7 @@ export async function fetchDeleteProfile(profileId) {
 }
 
 export const fetchCreateItem = async (itemData) => {
-    try {
+    
         const token = localStorage.getItem("token");
         const response = await fetch(`${BASE_URL}items`, {
             method: 'POST',
@@ -236,12 +280,125 @@ export const fetchCreateItem = async (itemData) => {
         });
 
         if (!response.ok) {
-            throw new Error('Error al crear el ítem');
+            throw new Error('Error en la respuesta del servidor');
+        }
+    
+        const json = await response.json();
+        console.log("Respuesta del backend:", json);
+        // Revisa que json tenga la forma esperada
+       
+    
+        return json.data;
+
+};
+
+export async function fetchDeleteItem(itemId) {
+    try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(`${BASE_URL}items/${itemId}`, {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json',
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('Delete error response:', {
+                status: response.status,
+                statusText: response.statusText,
+                body: errorText
+            });
+            throw new Error('Error al eliminar el ítem');
         }
 
         return await response.json();
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error in fetchDeleteItem:', error);
         throw error;
     }
-};
+}
+
+export async function fetchUpdateItem(itemId, itemData) {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}items/${itemId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`,
+
+        },
+        body: JSON.stringify(itemData)
+    });
+    if (!response.ok) {
+        throw new Error('Error al actualizar el ítem');
+    }
+    return await response.json();
+}
+
+export async function fetchLowStockItems() {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`${BASE_URL}items/low-stock`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        
+        if (!response.ok) {
+            throw new Error("Error al cargar los items con stock bajo");
+        }
+        
+        const json = await response.json();
+        return json.data;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+    }
+}
+
+export async function fetchItemsByType() {
+    const token = localStorage.getItem("token");
+    try {
+        const response = await fetch(`${BASE_URL}items/by-type`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`,
+            },
+        });
+        
+        if (!response.ok) {
+            throw new Error("Error al cargar los items por tipo");
+        }
+        
+        const json = await response.json();
+        return json.data;
+    } catch (error) {
+        console.error('Fetch error:', error);
+        throw error;
+    }
+}
+
+export async function fetchUpdateProfile(profileId, data) {
+    const token = localStorage.getItem("token");
+    const response = await fetch(`${BASE_URL}profiles/${profileId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+    });
+
+    if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al actualizar el perfil');
+    }
+
+    return await response.json();
+}
+    
